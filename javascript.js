@@ -46,3 +46,46 @@ $(document).ready(function () {
         }
     })
 });
+
+const gallery = document.getElementById('gallery');
+ 
+    gallery.addEventListener('mouseenter', function() {
+      gallery.style.cursor = 'ew-resize';
+    });
+    
+    gallery.addEventListener('mouseleave', function() {
+      gallery.style.cursor = 'default';
+    });
+    
+   let isCursorPressed = false;
+let startX, scrollLeft;
+
+gallery.addEventListener('mousedown', function(event) {
+  isCursorPressed = true;
+  startX = event.pageX - gallery.offsetLeft;
+  scrollLeft = gallery.scrollLeft;
+});
+
+gallery.addEventListener('mousemove', function(event) {
+  if (!isCursorPressed) return;
+  event.preventDefault();
+  const x = event.pageX - gallery.offsetLeft;
+  const walk = (x - startX) * 0.8; // Sesuaikan nilai 2 sesuai kecepatan yang Anda inginkan
+  gallery.scrollLeft = scrollLeft - walk;
+});
+
+gallery.addEventListener('mouseup', function() {
+  isCursorPressed = false;
+});
+
+// Fungsi untuk menambahkan efek slow motion
+function smoothScroll() {
+  if (!isCursorPressed) return;
+  const newScrollLeft = gallery.scrollLeft;
+  gallery.scrollLeft += (scrollLeft - newScrollLeft) * 0.1;
+  requestAnimationFrame(smoothScroll);
+}
+
+gallery.addEventListener('mousedown', function() {
+  requestAnimationFrame(smoothScroll);
+});
